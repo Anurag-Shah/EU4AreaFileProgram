@@ -89,6 +89,15 @@ public class Superregion {
         return text + "}\n";
     }
 
+    /**
+     * writeSuperregion:
+     * Method writes all the data from regions and respective areas arrays into the files, starting with a particular
+     * file header. This method will be called as the final step when the script is run, since it is meant to be
+     * executed Superregion by Superregion.
+     *
+     * @param fileheader Header in front of file names to prevent overwrite issues with multiple superregion files
+     * present in the program directory (and also to avoid the headache that is formatting/corrections with append)
+     */
     public void writeSuperregion(String fileheader) {
         FileWriter fileWriter = null;
 
