@@ -135,6 +135,8 @@ public class Region {
 
     /**
      * provinceCount
+     * Method counts the total number of provinces in the region
+     *
      * @return total number of provinces in the region
      */
     int provinceCount() {
