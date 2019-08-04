@@ -90,6 +90,133 @@ public class Superregion {
     }
 
     /**
+     * generateLocalizationText:
+     * Method generates formatted text for localization file
+     *
+     * @return formatted text block for whole superregion
+     */
+    public String generateLocalizationText() {
+        String loc = "l_english:\n";
+        for (int i = 0; i < regions.length; i++) {
+            loc += regions[i].generateAreaRegionLocalization();
+        }
+        loc += " " + formattedName() + ": \"" + name + "\"\n";
+        loc += " " + formattedName() + "_name: \"" + name + "\"\n";
+        loc += " " + formattedName() + "_adj: \"" + name + "\"\n";
+
+        return loc;
+    }
+
+    /**
+     * provinceCount:
+     * @return the number of provinces in the superregion
+     */
+    public int provinceCount() {
+        int count = 0;
+        for (int i = 0; i < regions.length; i++) {
+            count += regions[i].provinceCount();
+        }
+
+        return count;
+    }
+
+    /**
+     * getProvinceArray:
+     * Method builds an unsorted array of all provinces across superregion
+     *
+     * @return integer array of provinces
+     */
+    public int[] getProvinceArray() {
+        try {
+            int[] provinces = new int[provinceCount()];
+            int count = 0;
+            for (int i = 0; i < regions.length; i++) {
+                for (int j = 0; j < regions[i].getAreas().length; j++) {
+                    for (int k = 0; k < regions[i].getAreas()[j].provinceArraySize(); k++) {
+                        provinces[count] = regions[i].getAreas()[j].provinceArray()[k];
+                        count++;
+                    }
+                }
+            }
+            return provinces;
+        } catch (Exception e) {
+            /**This makes my code more ordered for me than just having the method throw the exception. Basically, i want
+               this resolved in writeSuperregion itself so I can abort that method**/
+            throw new NumberFormatException();
+        }
+    }
+
+    /**
+     * Quicksort
+     */
+    public void quicksort(int[] array, int low, int high) {
+        if (low < high)
+        {
+            int pivot = partition(array, low, high);
+
+            quicksort(array, low, pivot - 1);
+            quicksort(array, pivot + 1, high);
+        }
+    }
+
+    /**
+     * Partition for quicksort
+     */
+    public int partition(int[] array, int low, int high) {
+        int pivot = array[high];
+        int i = (low - 1);
+        for (int j = low; j < high; j++)
+        {
+            if (array[j] <= pivot)
+            {
+                i++;
+
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        int temp = array[i + 1];
+        array[i + 1] = array[high];
+        array[high] = temp;
+
+        return i + 1;
+    }
+
+    /**
+     * continentFormattedName:
+     * Method formats name for the Continent the superregion belongs to
+     *
+     * @return formatted name
+     */
+    public String continentFormattedName() {
+        String formatted = String.join("_", continent.toLowerCase().split(" "));
+        return formatted.endsWith("_continent") ? formatted : formatted + "_continent";
+    }
+
+    /**
+     * generateContinentData:
+     * Method formats a list of provinces as required by continent.txt
+     *
+     * @param provinces : array of provinces in continent
+     *
+     * @return formatted text block
+     */
+    private String generateContinentData(int[] provinces) {
+        String provinceList = continent + " = {\n\t";
+        for (int i = 0; i < provinces.length; i++) {
+            provinceList += provinces[i];
+            if (i + 1 < provinces.length) {
+                provinceList += " ";
+            }
+        }
+
+        provinceList += "\n}";
+        return provinceList;
+    }
+
+    /**
      * writeSuperregion:
      * Method writes all the data from regions and respective areas arrays into the files, starting with a particular
      * file header. This method will be called as the final step when the script is run, since it is meant to be
@@ -99,6 +226,17 @@ public class Superregion {
      * present in the program directory (and also to avoid the headache that is formatting/corrections with append)
      */
     public void writeSuperregion(String fileheader) {
+
+        //Setup for continent.txt
+        int[] provinces;
+        try {
+            provinces = getProvinceArray();
+        } catch (Exception e) {
+            return;
+        }
+        quicksort(provinces, 0, provinces.length - 1);
+
+        //Declare Filewriter to be used for all files
         FileWriter fileWriter = null;
 
         //Areas File
@@ -106,7 +244,7 @@ public class Superregion {
             //Initialize FileWriter for area.txt
             fileWriter = new FileWriter(fileheader + "_area.txt");
 
-            //Generate area.txt region by region
+            //Generate area.txt data region by region
             String areaText = "";
             for (int i = 0; i < regions.length; i++) {
                 for (int j = 0; j < regions[i].getAreas().length; j++) {
@@ -119,7 +257,7 @@ public class Superregion {
             //Initialize FileWriter for region.txt
             fileWriter = new FileWriter(fileheader + "_region.txt");
 
-            //Generate region.txt region by region
+            //Generate region.txt data region by region
             String regionText = "";
             for (int k = 0; k < regions.length; k++) {
                 regionText += regions[k].generateRegionText();
@@ -127,20 +265,30 @@ public class Superregion {
             fileWriter.write(regionText);
             fileWriter.flush();
 
-            //Initialize FileWriter for superregion.txt
+            //Initialize FileWriter for superregion.txt data
             fileWriter = new FileWriter(fileheader + "_superregion.txt");
 
-            //Generate superregion.txt
+            //Generate superregion.txt data
             fileWriter.write(generateSuperregionText());
             fileWriter.flush();
 
             //Initialize FileWriter for continent.txt
             fileWriter = new FileWriter(fileheader + "_continent.txt");
 
-            //TODO FIGURE SOMETHING OUT FOR CONTINENT
+            //Generate continent.txt data
+            fileWriter.write(generateContinentData(provinces));
+            fileWriter.flush();
+
+            //Initialize FileWriter for Localization file
+            fileWriter = new FileWriter(fileheader + "_areas_regions_l_english.txt");
+
+            //Generate Localization
+            fileWriter.write(generateLocalizationText());
+            fileWriter.flush();
+
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 }

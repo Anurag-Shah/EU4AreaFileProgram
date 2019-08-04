@@ -45,4 +45,34 @@ public class Area {
     public String generateAreaText() {
         return "\n" + formattedName() + " = {\n" + "\t" + provinces + "\n}\n";
     }
+
+    /**
+     * provinceArraySize:
+     * Method returns the number of provinces in the area
+     *
+     * @return number of provinces in the area
+     */
+    public int provinceArraySize() {
+        return provinces.split(" ").length;
+    }
+
+    /**
+     * provinceArray:
+     * Method returns an integer array of the provinces in the area
+     *
+     * @return integer array of provinces
+     */
+    public int[] provinceArray() {
+        try {
+            String[] strProvinces = this.provinces.split(" ");
+            int[] ret = new int[strProvinces.length];
+            for (int i = 0; i < strProvinces.length; i++) {
+                ret[i] = Integer.parseInt(strProvinces[i]);
+            }
+            return ret;
+        } catch (Exception e) {
+            //TODO show a prompt saying that "AREA NAME" has provinces entered incorrectly, then abort the file writing.
+            throw new NumberFormatException();
+        }
+    }
 }

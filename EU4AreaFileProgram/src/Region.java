@@ -1,6 +1,3 @@
-import java.io.FileWriter;
-//TODO remove this if I dont end up using FileWriter here
-
 public class Region {
 
     private Area[] areas;       //Array of Areas belonging to this region
@@ -78,6 +75,10 @@ public class Region {
         //Formats spaces into underscores
         formatted = String.join("_", formatted.split(" "));
 
+        if (formatted.endsWith("_region")) {
+            formatted = formatted.substring(0, formatted.length() - 7);
+        }
+
         //Formats name to end with "_<superregion>_region" if not already
         if (formatted.endsWith(superregion)) {
             formatted += "_region";
@@ -105,6 +106,38 @@ public class Region {
         text += "\t}\n}\n";
 
         return text;
+    }
+
+    /**
+     * generateAreaRegionLocalization:
+     * Formats area names and region names for localization file
+     *
+     * @return formatted text block
+     */
+    public String generateAreaRegionLocalization() {
+        String loc = "";
+        for (int i = 0; i < areas.length; i++) {
+            loc += " " + areas[i].formattedName() + ": \"" + areas[i].getName() + "\"\n";
+            loc += " " + areas[i].formattedName() + "_name: \"" + areas[i].getName() + "\"\n";
+            loc += " " + areas[i].formattedName() + "_adj: \"" + areas[i].getName() + "\"\n";
+        }
+        loc += " " + formattedName() + ": \"" + name + "\"\n";
+        loc += " " + formattedName() + "_name: \"" + name + "\"\n";
+        loc += " " + formattedName() + "_adj: \"" + name + "\"\n";
+
+        return loc;
+    }
+
+    /**
+     * provinceCount
+     * @return total number of provinces in the region
+     */
+    public int provinceCount() {
+        int count = 0;
+        for (int i = 0; i < areas.length; i++) {
+            count += areas[i].provinceArraySize();
+        }
+        return count;
     }
 
 }
