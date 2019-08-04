@@ -36,4 +36,5 @@ universe of the Elder Scrolls, I'd highly recommend giving our mod a look!
 
 Our repo: https://github.com/toilercleaner666/nirn
 Our subreddit: https://www.reddit.com/r/nirnuniversallis/
-Our discord server: https://discord.gg/Spsh9pA ```
+Our discord server: https://discord.gg/Spsh9pA
+```
