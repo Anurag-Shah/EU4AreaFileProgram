@@ -18,6 +18,7 @@ public class GuiForm {
     private JButton clearButton;                        //Button to clear all regions and areas
     private JLabel superregionLabel;                    //Label for superregion name
     private JLabel continentLabel;                      //Label for continent name
+    private JLabel provincesLabel;
 
     private Superregion superregion;
 
@@ -113,6 +114,13 @@ public class GuiForm {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 refreshAreas();
+            }
+        });
+
+        areaList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                refreshProvinceLabel();
             }
         });
     }
@@ -295,6 +303,7 @@ public class GuiForm {
         if (superregion.getRegions() != null) {
             regionList.setListData(superregion.regionNames());
         }
+        provincesLabel.setText("Provinces: ");
     }
 
     /**
@@ -305,6 +314,24 @@ public class GuiForm {
         if (superregion.getRegions() != null && regionList.getSelectedIndex() != -1 &&
                 superregion.getRegions()[regionList.getSelectedIndex()].getAreas() != null) {
             areaList.setListData(superregion.getRegions()[regionList.getSelectedIndex()].areaNames());
+
+        } else if (superregion.getRegions() != null && regionList.getSelectedIndex() != -1 &&
+                superregion.getRegions()[regionList.getSelectedIndex()].getAreas() == null) {
+            areaList.setListData(new Object[1]);
+        }
+    }
+
+
+    /**
+     * refreshProvinceLabel:
+     * Method refreshes the province label to accurately display the provinces in selected area
+     */
+    private void refreshProvinceLabel() {
+        if (regionList.getSelectedIndex() != -1 && areaList.getSelectedIndex() != -1) {
+            provincesLabel.setText("Provinces: " + superregion.getRegions()[regionList.getSelectedIndex()].
+                    getAreas()[areaList.getSelectedIndex()].getProvinces());
+        } else {
+            provincesLabel.setText("Provinces: ");
         }
     }
 }
