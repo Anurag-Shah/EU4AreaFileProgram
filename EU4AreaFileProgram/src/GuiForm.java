@@ -324,7 +324,7 @@ public class GuiForm {
 
     /**
      * refreshProvinceLabel:
-     * Method refreshes the province label to accurately display the provinces in selected area
+     * Method refreshes the provinceLabel JLabel to accurately display the provinces in selected area
      */
     private void refreshProvinceLabel() {
         if (regionList.getSelectedIndex() != -1 && areaList.getSelectedIndex() != -1) {
