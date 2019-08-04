@@ -16,27 +16,32 @@ public class Region {
         this.areas = areas;
     }
 
-    public String getName() {
+    public Region(String name, String superregion) {
+        this(name);
+        this.superregion = superregion;
+    }
+
+    String getName() {
         return name;
     }
 
-    public Area[] getAreas() {
+    Area[] getAreas() {
         return areas;
     }
 
-    public String getSuperregion() {
+    String getSuperregion() {
         return superregion;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public void setAreas(Area[] areas) {
+    void setAreas(Area[] areas) {
         this.areas = areas;
     }
 
-    public void setSuperregion(String superregion) {
+    void setSuperregion(String superregion) {
         this.superregion = superregion;
     }
 
@@ -47,7 +52,7 @@ public class Region {
      * @param area area to add
      */
 
-    public void addArea(Area area) {
+    void addArea(Area area) {
         if (areas == null) {
             //If areas array hasn't been initialized do so now
             areas = new Area[1];
@@ -69,7 +74,7 @@ public class Region {
      *
      * @return formatted region name
      */
-    public String formattedName() {
+    String formattedName() {
         String formatted = name.toLowerCase();
 
         //Formats spaces into underscores
@@ -98,7 +103,7 @@ public class Region {
      *
      * @return returns the formatted text block
      */
-    public String generateRegionText() {
+    String generateRegionText() {
         String text = "\n" + formattedName() + " = {\n\tareas = {\n";
         for (int i = 0; i < areas.length; i++) {
             text += "\t\t" + areas[i].formattedName() + "\n";
@@ -114,7 +119,7 @@ public class Region {
      *
      * @return formatted text block
      */
-    public String generateAreaRegionLocalization() {
+    String generateAreaRegionLocalization() {
         String loc = "";
         for (int i = 0; i < areas.length; i++) {
             loc += " " + areas[i].formattedName() + ": \"" + areas[i].getName() + "\"\n";
@@ -132,12 +137,28 @@ public class Region {
      * provinceCount
      * @return total number of provinces in the region
      */
-    public int provinceCount() {
+    int provinceCount() {
         int count = 0;
         for (int i = 0; i < areas.length; i++) {
             count += areas[i].provinceArraySize();
         }
         return count;
+    }
+
+
+    /**
+     * areaNames:
+     * Method builds a string array of all names of Area objects in areas
+     *
+     * @return String array of area names
+     */
+    String[] areaNames() {
+        String[] names = new String[areas.length];
+        for (int i = 0; i < areas.length; i++) {
+            names[i] = areas[i].getName();
+        }
+
+        return names;
     }
 
 }

@@ -6,38 +6,38 @@ public class Superregion {
     private String name;      //Unformatted name of area
 
     //Normal Constructor
-    public Superregion(String name, String continent) {
+    Superregion(String name, String continent) {
         this.name = name;
         this.continent = continent;
     }
 
     //Constructor when editing superregion
-    public Superregion(String name, String continent, Region[] regions) {
+    Superregion(String name, String continent, Region[] regions) {
         this(name, continent);
         this.regions = regions;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public Region[] getRegions() {
+    Region[] getRegions() {
         return regions;
     }
 
-    public String getContinent() {
+    String getContinent() {
         return continent;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
-    public void setContinent(String continent) {
+    void setContinent(String continent) {
         this.continent = continent;
     }
 
-    public void setRegions(Region[] regions) {
+    void setRegions(Region[] regions) {
         this.regions = regions;
     }
 
@@ -47,7 +47,7 @@ public class Superregion {
      *
      * @param region region to add
      */
-    public void addRegion(Region region) {
+    void addRegion(Region region) {
 
         region.setSuperregion(name);
         if (regions == null) {
@@ -64,12 +64,25 @@ public class Superregion {
     }
 
     /**
+     * changeName:
+     * Method changes the superregion name for this and for all Region objects in regions
+     *
+     * @param newName name to change to
+     */
+    void changeName(String newName) {
+        this.setName(newName);
+        for (int i = 0; i < regions.length; i++) {
+            regions[i].setSuperregion(newName);
+        }
+    }
+
+    /**
      * formattedName:
      * Method formats the superregion name to match the formatting in superregion.txt
      *
      * @return formatted superregion name
      */
-    public String formattedName() {
+    private String formattedName() {
         String formatted = name.toLowerCase();
         formatted = String.join("_", formatted.split(" "));
         return formatted + (formatted.endsWith("superregion") ? "" : "_superregion");
@@ -81,7 +94,7 @@ public class Superregion {
      *
      * @return returns the formatted text block
      */
-    public String generateSuperregionText() {
+    private String generateSuperregionText() {
         String text = "\n" + formattedName() + " = {\n\n";
         for (int i = 0; i < regions.length; i++) {
             text += "\t" + regions[i].formattedName() + "\n";
@@ -95,7 +108,7 @@ public class Superregion {
      *
      * @return formatted text block for whole superregion
      */
-    public String generateLocalizationText() {
+    private String generateLocalizationText() {
         String loc = "l_english:\n";
         for (int i = 0; i < regions.length; i++) {
             loc += regions[i].generateAreaRegionLocalization();
@@ -111,7 +124,7 @@ public class Superregion {
      * provinceCount:
      * @return the number of provinces in the superregion
      */
-    public int provinceCount() {
+    private int provinceCount() {
         int count = 0;
         for (int i = 0; i < regions.length; i++) {
             count += regions[i].provinceCount();
@@ -126,7 +139,7 @@ public class Superregion {
      *
      * @return integer array of provinces
      */
-    public int[] getProvinceArray() {
+    private int[] getProvinceArray() {
         try {
             int[] provinces = new int[provinceCount()];
             int count = 0;
@@ -140,8 +153,8 @@ public class Superregion {
             }
             return provinces;
         } catch (Exception e) {
-            /**This makes my code more ordered for me than just having the method throw the exception. Basically, i want
-               this resolved in writeSuperregion itself so I can abort that method**/
+            // This makes my code more ordered for me than just having the method throw the exception. Basically, i want
+            // this resolved in writeSuperregion itself so I can abort that method
             throw new NumberFormatException();
         }
     }
@@ -149,7 +162,7 @@ public class Superregion {
     /**
      * Quicksort
      */
-    public void quicksort(int[] array, int low, int high) {
+    private void quicksort(int[] array, int low, int high) {
         if (low < high)
         {
             int pivot = partition(array, low, high);
@@ -162,7 +175,7 @@ public class Superregion {
     /**
      * Partition for quicksort
      */
-    public int partition(int[] array, int low, int high) {
+    private int partition(int[] array, int low, int high) {
         int pivot = array[high];
         int i = (low - 1);
         for (int j = low; j < high; j++)
@@ -190,7 +203,7 @@ public class Superregion {
      *
      * @return formatted name
      */
-    public String continentFormattedName() {
+    private String continentFormattedName() {
         String formatted = String.join("_", continent.toLowerCase().split(" "));
         return formatted.endsWith("_continent") ? formatted : formatted + "_continent";
     }
@@ -204,7 +217,7 @@ public class Superregion {
      * @return formatted text block
      */
     private String generateContinentData(int[] provinces) {
-        String provinceList = continent + " = {\n\t";
+        String provinceList = continentFormattedName() + " = {\n\t";
         for (int i = 0; i < provinces.length; i++) {
             provinceList += provinces[i];
             if (i + 1 < provinces.length) {
@@ -216,6 +229,25 @@ public class Superregion {
         return provinceList;
     }
 
+    void clearSuperregion() {
+        regions = null;
+    }
+
+    /**
+     * regionNames:
+     * Method builds a String array of all region names
+     *
+     * @return String array of region names
+     */
+    String[] regionNames() {
+        String[] names = new String[regions.length];
+        for (int i = 0; i < regions.length; i++) {
+            names[i] = regions[i].getName();
+        }
+
+        return names;
+    }
+
     /**
      * writeSuperregion:
      * Method writes all the data from regions and respective areas arrays into the files, starting with a particular
@@ -225,7 +257,7 @@ public class Superregion {
      * @param fileheader Header in front of file names to prevent overwrite issues with multiple superregion files
      * present in the program directory (and also to avoid the headache that is formatting/corrections with append)
      */
-    public void writeSuperregion(String fileheader) {
+    void writeSuperregion(String fileheader) {
 
         //Setup for continent.txt
         int[] provinces;

@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class Area {
 
     private String provinces; //Space separated list of provinces in the area
@@ -8,19 +10,19 @@ public class Area {
         this.provinces = provinces;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public String getProvinces() {
+    String getProvinces() {
         return provinces;
     }
 
-    public void setProvinces(String provinces) {
+    void setProvinces(String provinces) {
         this.provinces = provinces;
     }
 
@@ -30,7 +32,7 @@ public class Area {
      *
      * @return formatted area name
      */
-    public String formattedName() {
+    String formattedName() {
         String formatted = name.toLowerCase();
         formatted = String.join("_", formatted.split(" "));
         return formatted + (formatted.endsWith("_area") ? "" : "_area");
@@ -42,7 +44,7 @@ public class Area {
      *
      * @return returns the formatted text block
      */
-    public String generateAreaText() {
+    String generateAreaText() {
         return "\n" + formattedName() + " = {\n" + "\t" + provinces + "\n}\n";
     }
 
@@ -52,7 +54,7 @@ public class Area {
      *
      * @return number of provinces in the area
      */
-    public int provinceArraySize() {
+    int provinceArraySize() {
         return provinces.split(" ").length;
     }
 
@@ -62,7 +64,7 @@ public class Area {
      *
      * @return integer array of provinces
      */
-    public int[] provinceArray() {
+    int[] provinceArray() {
         try {
             String[] strProvinces = this.provinces.split(" ");
             int[] ret = new int[strProvinces.length];
@@ -71,7 +73,8 @@ public class Area {
             }
             return ret;
         } catch (Exception e) {
-            //TODO show a prompt saying that "AREA NAME" has provinces entered incorrectly, then abort the file writing.
+            JOptionPane.showMessageDialog(null, "Error Writing Files", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             throw new NumberFormatException();
         }
     }
