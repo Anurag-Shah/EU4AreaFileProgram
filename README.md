@@ -6,9 +6,17 @@ Welcome to the EU4 Area File Program! This program writes the formatted files fo
 This program requires only a JRE of 11 or greater (I have not tested it with an older JRE, if you do please let me know if it works and I will edit this accordingly)
 
 ## Using the Program:
-You can find the latest .jar file for the script in the main repository directory.
+You can find the latest .jar file for the script in the main repository directory. (Named EU4FileAreaProgram.jar). Download just that file, **not** the entire repository.
 
 Double click this file to run it, and a prompt should pop up asking you to fill in first the Superregion name, then the Continent name. 
+
+After this, you will see 2 lists (currently empty): one for regions, and one for areas. Once you add a region, that list should be populated. You can add an area to a region by selecting that region in the list; once again, after adding at least one area to that region, the area list should also be populated (when you select the respective region, of course). If you make any mistakes, you can always edit them using the edit buttons, and you can quickly see the provinces in an area by looking at the Label under the area list, to make sure you didn't make any mistakes.
+
+If you made too many mistakes, you can clear both lists with the "Clear" button.
+
+Once you are done, hit the finalize button. You will be prompted to entire a file header, do so (this will be a header in front of the file name, for example if you entered "spr" here, the files generated would be spr_area.txt, spr_region.txt, etc. This is to make sure that it does not overwrite any files. Also, it is handy if you find any mistakes after finalizing and want to fix those before closing the program; in fact, for this very reason the finalize button does not exit the window.)
+
+After that, you should see your complete files in the same directory as you placed your .jar file. Copy and paste the contents over to your main area.txt / region.txt / etc. in your Mod folder.
 
 ## Notes on using the Program:
 The continent file must be added manually to the localization. This was not added through the program to make sure that multiple superregions in the same continent dont print out the continent localization multiple times.
